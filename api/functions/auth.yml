@@ -1,0 +1,6 @@
+authPreSignUp:
+  handler: handler.preSignUp
+  events:
+    - cognitoUserPool:
+        pool: UserPool
+        trigger: PreSignUp

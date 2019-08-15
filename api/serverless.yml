@@ -1,0 +1,60 @@
+service: api
+#app: your-app-name
+#tenant: your-tenant-name
+frameworkVersion: ">=1.50.0 <2.0.0"
+
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs10.x
+  region: eu-central-1
+
+functions:
+  #- ${file(functions/auth.yml)}
+  #- ${file(functions/hello.yml)}
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        AliasAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        EmailConfiguration:
+          EmailSendingAccount: "DEVELOPER"
+          ReplyToEmailAddress: "hello@nikl.me"
+          SourceArn: !GetAtt logicalNameOfResource.attributeName
+        EmailVerificationSubject: "Confirm your e mail adress"
+        EmailVerificationMessage: "Hi {username} Your verification code is {####}. Link: {## click here ##}"
+        Schema:
+          - AttributeDataType: String
+            Name: email
+            Required: true
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}_${self:provider.stage}_client
+        UserPoolId:
+          Ref: CognitoUserPool
+        GenerateSecret: false
+    MySnsSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: "email"
+        Region: "eu-west-1"
+        TopicArn: String
+
+  # Print out the Id of the User Pool that is created
+  Outputs:
+    UserPoolId:
+      Value:
+        Ref: CognitoUserPool
+
+    UserPoolClientId:
+      Value:
+        Ref: CognitoUserPoolClient

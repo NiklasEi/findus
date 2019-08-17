@@ -23,4 +23,14 @@ nav, footer {
 
 #gatsby-focus-wrapper .content {
   height: 100%;
+  position: relative;
+}
+
+.flexCenter {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,6 +1,0 @@
-hello:
-  handler: handler.hello
-  events:
-    - http:
-        path: hi
-        method: get

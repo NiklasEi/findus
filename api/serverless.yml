@@ -10,11 +10,13 @@ provider:
   name: aws
   stage: dev
   runtime: nodejs10.x
-  region: eu-central-1
+  region: ${env:MY_AWS_REGION}
+  memorySize: 512
 
 functions:
-  #- ${file(functions/auth.yml)}
-  #- ${file(functions/hello.yml)}
+  - ${file(functions/auth.yml)}
+  - ${file(functions/posts.yml)}
+  - ${file(functions/time.yml)}
 
 resources:
   Resources:
@@ -25,10 +27,10 @@ resources:
           - email
         AutoVerifiedAttributes:
           - email
-        EmailConfiguration:
-          EmailSendingAccount: "DEVELOPER"
-          ReplyToEmailAddress: "hello@nikl.me"
-          SourceArn: !GetAtt logicalNameOfResource.attributeName
+        # EmailConfiguration:
+        #   EmailSendingAccount: "DEVELOPER"
+        #   ReplyToEmailAddress: "hello@nikl.me"
+        #   SourceArn: !GetAtt logicalNameOfResource.attributeName
         EmailVerificationSubject: "Confirm your e mail adress"
         EmailVerificationMessage: "Hi {username} Your verification code is {####}. Link: {## click here ##}"
         Schema:
@@ -42,12 +44,22 @@ resources:
         UserPoolId:
           Ref: CognitoUserPool
         GenerateSecret: false
-    MySnsSubscription:
-      Type: AWS::SNS::Subscription
+    GatewayResponseDefault4XX: # handle CORS on 4xx responses
+      Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
-        Protocol: "email"
-        Region: "eu-west-1"
-        TopicArn: String
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'http://localhost:8000'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    # MySnsSubscription:
+    #   Type: AWS::SNS::Subscription
+    #   Properties:
+    #     Protocol: "email"
+    #     Region: "eu-west-1"
+    #     TopicArn: String
 
   # Print out the Id of the User Pool that is created
   Outputs:

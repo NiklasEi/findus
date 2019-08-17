@@ -1,17 +1,26 @@
-import React, { Component } from 'react'
-import Layout from "../../layouts/index"
-import ConfirmEmail from '../../components/auth/confirmEmail';
+import React, { Component } from "react";
+import Layout from "../../layouts/index";
+import ConfirmEmailForm from "../../components/auth/confirmEmail";
+import { navigate } from "gatsby";
 
 export class Confirm extends Component {
+  confirmed() {
+    navigate("/auth/login")
+  }
 
+  fail(err) {
+    console.error(err)
+  }
 
   render() {
     return (
       <Layout>
-        <ConfirmEmail/>
+        <div className="flexCenter">
+          <ConfirmEmailForm success={this.confirmed.bind(this)} fail={this.fail.bind(this)} />
+        </div>
       </Layout>
-    )
+    );
   }
 }
 
-export default Confirm
+export default Confirm;

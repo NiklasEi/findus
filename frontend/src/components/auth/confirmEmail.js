@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
 
-export class ConfirmEmail extends Component {
+export class ConfirmEmailForm extends Component {
   constructor(props) {
     super(props);
 
@@ -50,6 +50,7 @@ export class ConfirmEmail extends Component {
         <input
           type="text"
           name="username"
+          placeholder="Username"
           required
           onChange={this.onChange}
           value={this.state.username}
@@ -57,6 +58,7 @@ export class ConfirmEmail extends Component {
         <input
           type="text"
           name="code"
+          placeholder="Verification code"
           required
           onChange={this.onChange}
           value={this.state.code}
@@ -67,4 +69,4 @@ export class ConfirmEmail extends Component {
   }
 }
 
-export default ConfirmEmail;
+export default ConfirmEmailForm;

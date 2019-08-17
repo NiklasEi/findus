@@ -1,6 +1,8 @@
-authPreSignUp:
-  handler: handler.preSignUp
-  events:
-    - cognitoUserPool:
-        pool: UserPool
-        trigger: PreSignUp
+# authPreSignUp:
+#   handler: handler.preSignUp
+#   events:
+#     - cognitoUserPool:
+#         pool: UserPool
+#         trigger: PreSignUp
+authorizerFunc:
+  handler: functions/auth/authorizer.authorizer

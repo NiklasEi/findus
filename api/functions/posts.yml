@@ -1,0 +1,62 @@
+hello:
+  handler: functions/posts/hello.hello
+  events:
+    - http:
+        path: posts/hello
+        method: get
+        cors:
+          origin: 'http://localhost:8000'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: true
+        authorizer: 
+          name: authorizerFunc
+          resultTtlInSeconds: 0
+          type: token
+hi:
+  handler: functions/posts/hi.hi
+  events:
+    - http:
+        path: posts/hi
+        method: get
+        cors:
+          origins:
+            - http://localhost:8000
+            - http://example2.com
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: true
+hi2:
+  handler: functions/posts/hi2.hi
+  events:
+    - http:
+        path: posts/hi2
+        method: get
+        cors:
+          origins:
+            - http://localhost:8000
+            - http://example2.com
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+hi3:
+  handler: functions/posts/hi3.hi
+  events:
+    - http:
+        path: posts/hi3
+        method: get

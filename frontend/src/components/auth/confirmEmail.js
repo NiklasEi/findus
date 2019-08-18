@@ -5,19 +5,28 @@ export class ConfirmEmailForm extends Component {
   constructor(props) {
     super(props);
 
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let code = params.get("code");
-    let username = params.get("username");
-
     this.state = {
-      code: code || "",
-      username: username || "",
+      code: "",
+      username: "",
     };
 
     this.AmazonCognitoIdentity = require("amazon-cognito-identity-js");
     this.submit = this.submit.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  componentDidMount() {
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    let code = params.get("code");
+    let username = params.get("username");
+
+    if (code || username) {
+      this.setState({
+        code: code || "",
+        username: username || "",
+      });
+    }
   }
 
   submit(event) {

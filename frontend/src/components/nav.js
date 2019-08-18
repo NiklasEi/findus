@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import style from "../styles/nav.module.scss";
 import userPool from "../utils/auth/userPool";
+import { Link } from "gatsby";
 import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav as MatNav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -40,18 +39,18 @@ export class Nav extends Component {
         if (err) {
           console.log(err);
           if (this.state.isLoggedIn) {
-            this.setState({isLoggedIn: false})
+            this.setState({ isLoggedIn: false });
           }
           return;
         }
         console.log("session validity: " + session.isValid());
         if (this.state.isLoggedIn !== session.isValid()) {
-          this.setState({isLoggedIn: session.isValid()})
+          this.setState({ isLoggedIn: session.isValid() });
         }
       });
     } else {
       if (this.state.isLoggedIn) {
-        this.setState({isLoggedIn: false})
+        this.setState({ isLoggedIn: false });
       }
     }
   }
@@ -59,21 +58,27 @@ export class Nav extends Component {
   render() {
     return (
       <Navbar className={style.nav} light expand="md">
-        <NavbarBrand href="/">MySite</NavbarBrand>
+        <Link to="/" className="navbar-brand">Findus</Link>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <MatNav className="ml-auto" navbar>
             {this.state.isLoggedIn ? (
               <NavItem>
-                <NavLink href="/auth/logout"><FaSignOutAlt/> Logout</NavLink>
+                <Link to="/auth/logout" className="nav-link">
+                  <FaSignOutAlt /> Logout
+                </Link>
               </NavItem>
             ) : (
               <>
                 <NavItem>
-                  <NavLink href="/auth/login"><FaSignInAlt/> Login</NavLink>
+                  <Link to="/auth/login" className="nav-link">
+                    <FaSignInAlt /> Login
+                  </Link>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="/auth/signup"><FaUserPlus/> Signup</NavLink>
+                  <Link to="/auth/signup" className="nav-link">
+                    <FaUserPlus /> Signup
+                  </Link>
                 </NavItem>
               </>
             )}

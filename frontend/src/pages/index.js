@@ -1,22 +1,29 @@
 import React, { Component } from "react";
 import Layout from "../layouts/index";
-import axios from "axios"
+import axios from "axios";
 import { Link } from "gatsby";
 import getIdToken from "../utils/auth/getIdToken";
 
 export class Index extends Component {
-  async check() {
-    let token = await getIdToken
-    axios.get("https://c7kmbued26.execute-api.eu-central-1.amazonaws.com/dev/posts/hello", {
-      withCredentials: true,
-      headers: {'Authorization': "Bearer " + token.getJwtToken()}
-    })
-    .then(result => {
-      console.log(result)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  check() {
+    console.log("check")
+    getIdToken()
+      .then(token => {
+        console.log("calling")
+        return axios.get(
+          "https://c7kmbued26.execute-api.eu-central-1.amazonaws.com/dev/posts/hello",
+          {
+            withCredentials: true,
+            headers: { Authorization: "Bearer " + token.getJwtToken() },
+          }
+        );
+      })
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
   }
 
   render() {

@@ -1,14 +1,19 @@
 import getUser from "./getUser";
 
-export default new Promise(function(resolve, reject) {
-  console.log("Getting ID token");
-  getUser
-    .then(user => {
-      let session = user.getSignInUserSession();
-      if (session === null) reject(new Error("No signed in user session"));
-      resolve(session.getIdToken());
-    })
-    .catch(err => {
-      reject(err);
-    });
-});
+async function getIdToken() {
+  let user;
+  try {
+    user = await getUser();
+  } catch (err) {
+    throw err;
+  }
+  if (user) {
+    let session = user.getSignInUserSession();
+    if (session === null) throw new Error("No signed in user session");
+    else return session.getIdToken();
+  } else {
+    throw new Error("No current user");
+  }
+}
+
+export default getIdToken

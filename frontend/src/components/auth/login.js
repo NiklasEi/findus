@@ -4,8 +4,7 @@ import { navigate } from "gatsby";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Link from "@material-ui/core/Link";
+import { Link } from "gatsby";
 import { FaSpinner } from "react-icons/fa";
 
 export class LoginForm extends Component {
@@ -14,12 +13,27 @@ export class LoginForm extends Component {
     this.state = {
       user: {},
       loggingIn: false,
-      message: ""
+      message: "",
     };
+    this.onFailure = this.onFailure.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    this.resetState = this.resetState.bind(this);
     this.AmazonCognitoIdentity = require("amazon-cognito-identity-js");
     this.callbacks = {
       onSuccess: this.onSuccess,
-      onFailure: this.onFailure
+      onFailure: this.onFailure,
+    };
+  }
+
+  componentDidMount() {
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    let redirect = params.get("redirect");
+
+    if (redirect) {
+      this.setState({
+        redirect: redirect
+      });
     }
   }
 
@@ -32,7 +46,8 @@ export class LoginForm extends Component {
 
   login(event) {
     event.preventDefault();
-    this.setState({loggingIn: true, message: ""})
+    console.log(this);
+    this.setState({ loggingIn: true, message: "" });
     var authenticationData = {
       Username: this.state.user.username,
       Password: this.state.user.password,
@@ -49,61 +64,67 @@ export class LoginForm extends Component {
     cognitoUser.authenticateUser(authenticationDetails, this.callbacks);
   }
 
-  onSuccess = (result) => {
-    // var accessToken = result.getAccessToken().getJwtToken();
-    // var idToken = result.idToken.jwtToken;
+  onSuccess(result) {
     console.log(result);
-    this.setState({loggingIn: false, message: ""})
-    navigate(this.props.redirect ? this.props.redirect : "/");
+    navigate(this.state.redirect ? this.state.redirect : (this.props.redirect ? this.props.redirect : "/"));
   }
 
-  onFailure = (err) => {
+  onFailure(err) {
     console.log("failed to log in");
-    console.log(err);
-    this.setState({loggingIn: false, message: err.message})
+    console.log(this);
+    this.resetState(err.message);
+  }
+
+  resetState(message) {
+    this.setState({ loggingIn: false, message: message });
   }
 
   render() {
     return (
-      <>
-        <form onSubmit={this.login.bind(this)}>
-          {this.state.message ? <FormControlLabel>{this.state.message}</FormControlLabel> : ""}
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username or E-mail"
-            value={this.state.user.username || ""}
-            onChange={this.change.bind(this)}
-            name="username"
-            autoComplete="username"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            value={this.state.user.password || ""}
-            onChange={this.change.bind(this)}
-            id="password"
-            autoComplete="current-password"
-          />
-          <Button type="submit" fullWidth variant="contained" color="primary">
-            Log In {this.state.loggingIn ?
-            <FaSpinner/>
-            :""}
-          </Button>
-          <Link href="/auth/signup" variant="body2">
-            {"Don't have an account yet? Sign Up"}
-          </Link>
-        </form>
-      </>
+      <form onSubmit={this.login.bind(this)}>
+        {this.state.message ? <span>{this.state.message}</span> : ""}
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="Username or E-mail"
+          value={this.state.user.username || ""}
+          onChange={this.change.bind(this)}
+          name="username"
+          autoComplete="username"
+          disabled={this.state.loggingIn}
+          autoFocus
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          value={this.state.user.password || ""}
+          onChange={this.change.bind(this)}
+          id="password"
+          autoComplete="current-password"
+          disabled={this.state.loggingIn}
+        />
+        <Button type="submit" fullWidth variant="contained" color="primary">
+          {this.state.loggingIn ? (
+            <>
+              <span>Logging in&nbsp;</span>
+              <FaSpinner className="icon-spin" />
+            </>
+          ) : (
+            <span>Log in </span>
+          )}
+        </Button>
+        <Link to="/auth/signup">
+          {"Don't have an account yet? Sign Up"}
+        </Link>
+      </form>
     );
   }
 }

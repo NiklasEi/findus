@@ -3,7 +3,7 @@ import getUser from "../../utils/auth/getUser";
 
 export class LogoutButton extends Component {
   signOut(event) {
-    getUser
+    getUser()
     .then(user => {
       user.signOut()
       // callback

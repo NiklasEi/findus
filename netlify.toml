@@ -1,7 +1,7 @@
 [build]
   base    = "frontend"
-  command = "env && gatsby build"
+  command = "gatsby build"
   publish = "frontend/public"
 
 [context.production]
-  environment = { AWS_COGNITO_USER_POOL_ID = "eu-central-1_u6NKs1CQ5", AWS_COGNITO_CLIENT_ID = "3rq8tlc37hsai41u0lp71igkdd" }
+  environment = { GATSBY_AWS_COGNITO_USER_POOL_ID = "eu-central-1_u6NKs1CQ5", GATSBY_AWS_COGNITO_CLIENT_ID = "3rq8tlc37hsai41u0lp71igkdd" }

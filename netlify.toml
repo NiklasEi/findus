@@ -1,4 +1,4 @@
 [build]
   base    = "frontend"
-  command = "gatsby build"
+  command = "env && gatsby build"
   publish = "frontend/public"

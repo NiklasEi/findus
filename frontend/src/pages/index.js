@@ -31,6 +31,8 @@ export class Index extends Component {
       <Layout>
         <div className="flexCenter">
           <div>
+            <p>Welcome to Findus :)</p>
+            <p>Easily manage, querry and share your bookmark collections.</p>
             <Link to="/auth/login">
               <button>Login</button>
             </Link>

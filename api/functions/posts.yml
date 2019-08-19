@@ -5,7 +5,9 @@ hello:
         path: posts/hello
         method: get
         cors:
-          origin: 'http://localhost:8000'
+          origins:
+            - http://localhost:8000
+            - ${env:MY_DOMAIN}
           headers:
             - Content-Type
             - X-Amz-Date
@@ -27,7 +29,7 @@ hi:
         cors:
           origins:
             - http://localhost:8000
-            - http://example2.com
+            - ${env:MY_DOMAIN}
           headers:
             - Content-Type
             - X-Amz-Date
@@ -45,7 +47,7 @@ hi2:
         cors:
           origins:
             - http://localhost:8000
-            - http://example2.com
+            - ${env:MY_DOMAIN}
           headers:
             - Content-Type
             - X-Amz-Date

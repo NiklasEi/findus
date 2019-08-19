@@ -1,0 +1,21 @@
+getCollections:
+  handler: functions/app/collections.get
+  events:
+    - http:
+        path: app/collections
+        method: get
+        cors:
+          origins:
+            - http://localhost:8000
+            - ${env:MY_DOMAIN}
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: true
+        authorizer: 
+          name: authorizerFunc
+          type: token

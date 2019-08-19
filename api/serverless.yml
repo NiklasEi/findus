@@ -13,10 +13,17 @@ provider:
   region: ${env:MY_AWS_REGION}
   memorySize: 512
 
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
+
 functions:
   - ${file(functions/auth.yml)}
   - ${file(functions/posts.yml)}
   - ${file(functions/time.yml)}
+  - ${file(functions/app.yml)}
 
 resources:
   Resources:
@@ -45,7 +52,7 @@ resources:
           Ref: CognitoUserPool
         GenerateSecret: false
     GatewayResponseDefault4XX: # handle CORS on 4xx responses
-      Type: 'AWS::ApiGateway::GatewayResponse'
+      Type: "AWS::ApiGateway::GatewayResponse"
       Properties:
         ResponseParameters:
           gatewayresponse.header.Access-Control-Allow-Origin: "'http://localhost:8000'"
@@ -53,7 +60,7 @@ resources:
           gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
         ResponseType: DEFAULT_4XX
         RestApiId:
-          Ref: 'ApiGatewayRestApi'
+          Ref: "ApiGatewayRestApi"
     # MySnsSubscription:
     #   Type: AWS::SNS::Subscription
     #   Properties:

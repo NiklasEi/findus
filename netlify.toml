@@ -1,0 +1,4 @@
+[build]
+  base    = "frontend"
+  command = "gatsby build"
+  publish = "frontend/public"

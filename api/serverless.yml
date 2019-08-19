@@ -39,7 +39,7 @@ resources:
         #   ReplyToEmailAddress: "hello@nikl.me"
         #   SourceArn: !GetAtt logicalNameOfResource.attributeName
         EmailVerificationSubject: "Confirm your e mail adress"
-        EmailVerificationMessage: "Hi {username} Your verification code is {####}. Link: {## click here ##}"
+        EmailVerificationMessage: "Hi {username} Your verification code is {####}."
         Schema:
           - AttributeDataType: String
             Name: email
@@ -55,7 +55,7 @@ resources:
       Type: "AWS::ApiGateway::GatewayResponse"
       Properties:
         ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'http://localhost:8000'"
+          gatewayresponse.header.Access-Control-Allow-Origin: "'${env:ORIGIN}'"
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
           gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
         ResponseType: DEFAULT_4XX

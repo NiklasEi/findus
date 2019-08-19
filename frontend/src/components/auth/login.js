@@ -29,12 +29,17 @@ export class LoginForm extends Component {
     let search = window.location.search;
     let params = new URLSearchParams(search);
     let redirect = params.get("redirect");
+    let username = params.get("username");
 
+    let state = {}
     if (redirect) {
-      this.setState({
-        redirect: redirect
-      });
+        state.redirect = redirect;
     }
+    if (username) {
+        state.user = this.state.user;
+        state.user.username = username;
+    }
+    if(redirect || username) this.setState(state)
   }
 
   change(event) {
@@ -65,13 +70,10 @@ export class LoginForm extends Component {
   }
 
   onSuccess(result) {
-    console.log(result);
     navigate(this.state.redirect ? this.state.redirect : (this.props.redirect ? this.props.redirect : "/"));
   }
 
   onFailure(err) {
-    console.log("failed to log in");
-    console.log(this);
     this.resetState(err.message);
   }
 

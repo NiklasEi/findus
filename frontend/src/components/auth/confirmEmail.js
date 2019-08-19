@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
+import { navigate } from "gatsby";
 
 export class ConfirmEmailForm extends Component {
   constructor(props) {
@@ -45,8 +46,11 @@ export class ConfirmEmailForm extends Component {
         console.log(err.message || JSON.stringify(err));
         return;
       }
+      if(result === "SUCCESS") {
+        navigate("/auth/login?username=" + this.state.username)
+      }
       console.log("call result: " + result);
-    });
+    }.bind(this));
   }
 
   onChange(event) {

@@ -3,6 +3,7 @@ import Layout from "../layouts/index";
 import axios from "axios";
 import { Link } from "gatsby";
 import getIdToken from "../utils/auth/getIdToken";
+import { hello } from "../utils/endpoints"
 
 export class Index extends Component {
   check() {
@@ -11,7 +12,7 @@ export class Index extends Component {
       .then(token => {
         console.log("calling")
         return axios.get(
-          "https://c7kmbued26.execute-api.eu-central-1.amazonaws.com/dev/posts/hello",
+          hello,
           {
             withCredentials: true,
             headers: { Authorization: "Bearer " + token.getJwtToken() },

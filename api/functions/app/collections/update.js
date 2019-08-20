@@ -1,6 +1,9 @@
 'use strict';
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+AWS.config.apiVersions = {
+  dynamodb: '2012-08-10'
+};
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -9,12 +12,12 @@ module.exports.update = (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   // validation
-  if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
+  if (typeof data.title !== 'string') {
     console.error('Validation Failed');
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t update the todo item.',
+      body: 'Couldn\'t update the collection.',
     });
     return;
   }
@@ -24,19 +27,17 @@ module.exports.update = (event, context, callback) => {
     Key: {
       id: event.pathParameters.id,
     },
-    ExpressionAttributeNames: {
-      '#todo_text': 'text',
-    },
     ExpressionAttributeValues: {
-      ':text': data.text,
-      ':checked': data.checked,
+      ':owner': event.pathParameters.user,
+      ':title': data.title,
       ':updatedAt': timestamp,
     },
-    UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
+    ConditionExpression: 'collectionOwner = :owner',
+    UpdateExpression: 'SET title = :title, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',
   };
 
-  // update the todo in the database
+  // update the collection in the database
   dynamoDb.update(params, (error, result) => {
     // handle potential errors
     if (error) {
@@ -44,7 +45,7 @@ module.exports.update = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo item.',
+        body: 'Couldn\'t update the collection.',
       });
       return;
     }

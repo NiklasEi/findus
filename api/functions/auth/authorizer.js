@@ -21,8 +21,8 @@ module.exports.authorizer = (event, context, callback) => {
   try {
     header = JSON.parse(header);
   } catch (error) {
-    context.errorMessage = "Invalid Token";
-    callback({errorMessage: "shit happens"}, policy(token, event.methodArn, false, "Invalid Token"));
+    console.log("Can't parse token header");
+    callback(null, policy(token, event.methodArn, false, "Invalid Token"));
     return;
   }
   var kid = header.kid;
@@ -41,7 +41,8 @@ module.exports.authorizer = (event, context, callback) => {
       try {
         keys = JSON.parse(body)["keys"];
       } catch (error) {
-        callback(null, policy(token, event.methodArn, false, "Invalid Token"));
+        console.log("Can't parse keys");
+        callback(null, policy(token, event.methodArn, false, "Invalid keys response"));
         return;
       }
       // search for the kid in the downloaded public keys
@@ -112,6 +113,8 @@ module.exports.authorizer = (event, context, callback) => {
   });
 };
 
+// the policies are cached with the principalId as key
+// I am using the token as ID, hence I have to Deny/Allow access for all user paths
 function policy(principalId, userOrArn, allow, errorMessage) {
   let response = {
     principalId: principalId,

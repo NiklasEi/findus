@@ -1,5 +1,5 @@
 create:
-  handler: functions/app/create.create
+  handler: functions/app/collections/create.create
   events:
     - http:
         path: app/user/{user}/collections
@@ -8,7 +8,7 @@ create:
         authorizer: ${self:custom.authorizer.users}
 
 list:
-  handler: functions/app/list.list
+  handler: functions/app/collections/list.list
   events:
     - http:
         path: app/user/{user}/collections
@@ -17,7 +17,7 @@ list:
         authorizer: ${self:custom.authorizer.users}
 
 get:
-  handler: functions/app/get.get
+  handler: functions/app/collections/get.get
   events:
     - http:
         path: app/user/{user}/collections/{id}
@@ -26,7 +26,7 @@ get:
         authorizer: ${self:custom.authorizer.users}
 
 update:
-  handler: functions/app/update.update
+  handler: functions/app/collections/update.update
   events:
     - http:
         path: app/user/{user}/collections/{id}
@@ -35,7 +35,7 @@ update:
         authorizer: ${self:custom.authorizer.users}
 
 delete:
-  handler: functions/app/delete.delete
+  handler: functions/app/collections/delete.delete
   events:
     - http:
         path: app/user/{user}/collections/{id}

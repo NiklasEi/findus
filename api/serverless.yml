@@ -13,18 +13,19 @@ provider:
   region: ${env:MY_AWS_REGION}
   memorySize: 256
   environment:
-    DYNAMODB_TABLE_COLLECTIONS: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE_COLLECTIONS: ${self:service}-${opt:stage, self:provider.stage}-collections
     DYNAMODB_TABLE_BOOKMARKS: ${self:service}-${opt:stage, self:provider.stage}-bookmarks
+    DYNAMODB_TABLE_USERS: ${self:service}-${opt:stage, self:provider.stage}-users
   iamRoleStatements:
     - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
+      Action: ${self:custom.dynamoActions}
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_COLLECTIONS}"
+    - Effect: Allow
+      Action: ${self:custom.dynamoActions}
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_BOOKMARKS}"
+    - Effect: Allow
+      Action: ${self:custom.dynamoActions}
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_USERS}"
 
 custom:
   cors:
@@ -44,6 +45,14 @@ custom:
       type: token
       identitySource: method.request.header.Authorization
       identityValidationExpression: '^Bearer [\w-]+\.[\w-]+\.[\w-]+$'
+  dynamoActions:
+    - dynamodb:Query
+    - dynamodb:Scan
+    - dynamodb:GetItem
+    - dynamodb:PutItem
+    - dynamodb:UpdateItem
+    - dynamodb:DeleteItem
+    - dynamodb:BatchGetItem
 
 package:
   excludeDevDependencies: false
@@ -91,44 +100,54 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: "ApiGatewayRestApi"
-    CollectionsDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE_COLLECTIONS}
-    BookmarksDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE_BOOKMARKS}
-    # MySnsSubscription:
-    #   Type: AWS::SNS::Subscription
+    # UsersDynamoDbTable:
+    #   Type: 'AWS::DynamoDB::Table'
+    #   DeletionPolicy: Retain
     #   Properties:
-    #     Protocol: "email"
-    #     Region: "eu-west-1"
-    #     TopicArn: String
+    #     AttributeDefinitions:
+    #       -
+    #         AttributeName: id
+    #         AttributeType: S
+    #     KeySchema:
+    #       -
+    #         AttributeName: id
+    #         KeyType: HASH
+    #     ProvisionedThroughput:
+    #       ReadCapacityUnits: 1
+    #       WriteCapacityUnits: 1
+    #     TableName: ${self:provider.environment.DYNAMODB_TABLE_USERS}
+    # CollectionsDynamoDbTable:
+    #   Type: 'AWS::DynamoDB::Table'
+    #   DeletionPolicy: Retain
+    #   Properties:
+    #     AttributeDefinitions:
+    #       -
+    #         AttributeName: id
+    #         AttributeType: S
+    #     KeySchema:
+    #       -
+    #         AttributeName: id
+    #         KeyType: HASH
+    #     ProvisionedThroughput:
+    #       ReadCapacityUnits: 1
+    #       WriteCapacityUnits: 1
+    #     TableName: ${self:provider.environment.DYNAMODB_TABLE_COLLECTIONS}
+    # BookmarksDynamoDbTable:
+    #   Type: 'AWS::DynamoDB::Table'
+    #   DeletionPolicy: Retain
+    #   Properties:
+    #     AttributeDefinitions:
+    #       -
+    #         AttributeName: id
+    #         AttributeType: S
+    #     KeySchema:
+    #       -
+    #         AttributeName: id
+    #         KeyType: HASH
+    #     ProvisionedThroughput:
+    #       ReadCapacityUnits: 1
+    #       WriteCapacityUnits: 1
+    #     TableName: ${self:provider.environment.DYNAMODB_TABLE_BOOKMARKS}
 
   # Print out the Id of the User Pool that is created
   Outputs:

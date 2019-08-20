@@ -1,6 +1,9 @@
 'use strict';
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+AWS.config.apiVersions = {
+  dynamodb: '2012-08-10'
+};
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -10,9 +13,13 @@ module.exports.get = (event, context, callback) => {
     Key: {
       id: event.pathParameters.id,
     },
+    ExpressionAttributeValues: {
+      ':owner': event.pathParameters.user,
+    },
+    ConditionExpression: 'collectionOwner = :owner',
   };
 
-  // fetch todo from the database
+  // fetch collection from the database
   dynamoDb.get(params, (error, result) => {
     // handle potential errors
     if (error) {
@@ -20,7 +27,7 @@ module.exports.get = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo item.',
+        body: 'Couldn\'t fetch the collection.',
       });
       return;
     }

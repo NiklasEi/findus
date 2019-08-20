@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
 import { navigate } from "gatsby";
-
+import style from "../../styles/index.module.scss";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "gatsby";
@@ -69,7 +69,7 @@ export class SignupForm extends Component {
       null,
       function(err, result) {
         if (err) {
-          this.setState({signingUp: false, message: err.message})
+          this.setState({ signingUp: false, message: err.message });
           return;
         }
         console.log(result);
@@ -80,7 +80,10 @@ export class SignupForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.signup.bind(this)}>
+      <form
+        onSubmit={this.signup.bind(this)}
+        className={this.props.className || style.form || ""}
+      >
         {this.state.message && <span>{this.state.message}</span>}
         <TextField
           variant="outlined"
@@ -165,9 +168,7 @@ export class SignupForm extends Component {
             <span>Sign me up</span>
           )}
         </Button>
-        <Link to="/auth/login">
-          {"Already have an account? Log in"}
-        </Link>
+        <Link to="/auth/login">{"Already have an account? Log in"}</Link>
       </form>
     );
   }

@@ -3,7 +3,9 @@ import Layout from "../layouts/index";
 import axios from "axios";
 import { Link } from "gatsby";
 import getIdToken from "../utils/auth/getIdToken";
-import { hello } from "../utils/endpoints"
+import { hello, create } from "../utils/endpoints"
+import style from "../styles/index.module.scss"
+import getUser from "../utils/auth/getUser";
 
 export class Index extends Component {
   check() {
@@ -27,11 +29,18 @@ export class Index extends Component {
       });
   }
 
+  create() {
+    getIdToken()
+    .then(token => {
+      token.decodePayload()
+    })
+  }
+
   render() {
     return (
       <Layout>
         <div className="flexCenter">
-          <div>
+          <div className={style.div}>
             <p>Welcome to Findus :)</p>
             <p>Easily manage, querry and share your bookmark collections.</p>
             <Link to="/auth/login">

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
 import { navigate } from "gatsby";
-
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "gatsby";
 import { FaSpinner } from "react-icons/fa";
+import style from "../../styles/index.module.scss";
 
 export class LoginForm extends Component {
   constructor(props) {
@@ -31,15 +31,15 @@ export class LoginForm extends Component {
     let redirect = params.get("redirect");
     let username = params.get("username");
 
-    let state = {}
+    let state = {};
     if (redirect) {
-        state.redirect = redirect;
+      state.redirect = redirect;
     }
     if (username) {
-        state.user = this.state.user;
-        state.user.username = username;
+      state.user = this.state.user;
+      state.user.username = username;
     }
-    if(redirect || username) this.setState(state)
+    if (redirect || username) this.setState(state);
   }
 
   change(event) {
@@ -51,13 +51,11 @@ export class LoginForm extends Component {
 
   login(event) {
     event.preventDefault();
-    console.log(this);
     this.setState({ loggingIn: true, message: "" });
     var authenticationData = {
       Username: this.state.user.username,
       Password: this.state.user.password,
     };
-    console.log(authenticationData);
     var authenticationDetails = new this.AmazonCognitoIdentity.AuthenticationDetails(
       authenticationData
     );
@@ -70,7 +68,14 @@ export class LoginForm extends Component {
   }
 
   onSuccess(result) {
-    navigate(this.state.redirect ? this.state.redirect : (this.props.redirect ? this.props.redirect : "/"));
+    console.log(result)
+    navigate(
+      this.state.redirect
+        ? this.state.redirect
+        : this.props.redirect
+        ? this.props.redirect
+        : "/"
+    );
   }
 
   onFailure(err) {
@@ -83,9 +88,13 @@ export class LoginForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.login.bind(this)}>
+      <form
+        onSubmit={this.login.bind(this)}
+        className={this.props.className || style.form || ""}
+      >
         {this.state.message ? <span>{this.state.message}</span> : ""}
         <TextField
+          className={style.input}
           variant="outlined"
           margin="normal"
           required
@@ -100,6 +109,7 @@ export class LoginForm extends Component {
           autoFocus
         />
         <TextField
+          className={style.input}
           variant="outlined"
           margin="normal"
           required
@@ -123,9 +133,7 @@ export class LoginForm extends Component {
             <span>Log in </span>
           )}
         </Button>
-        <Link to="/auth/signup">
-          {"Don't have an account yet? Sign Up"}
-        </Link>
+        <Link to="/auth/signup">{"Don't have an account yet? Sign Up"}</Link>
       </form>
     );
   }

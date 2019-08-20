@@ -8,12 +8,12 @@ import {
   NavbarToggler,
   Nav as MatNav,
   NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
+  // UncontrolledDropdown,
+  // DropdownToggle,
+  // DropdownMenu,
+  // DropdownItem,
 } from "reactstrap";
-import { FaSignOutAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaSignOutAlt, FaSignInAlt, FaUserPlus, FaBookmark, FaUser } from "react-icons/fa";
 
 export class Nav extends Component {
   constructor(props) {
@@ -63,11 +63,23 @@ export class Nav extends Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <MatNav className="ml-auto" navbar>
             {this.state.isLoggedIn ? (
+              <>
+                <NavItem>
+                  <Link to="/auth/logout" className="nav-link">
+                    <FaSignOutAlt /> Logout
+                  </Link>
+                </NavItem>
               <NavItem>
-                <Link to="/auth/logout" className="nav-link">
-                  <FaSignOutAlt /> Logout
+                <Link to="/app/profile" className="nav-link">
+                  <FaUser /> Profile
                 </Link>
               </NavItem>
+              <NavItem>
+                <Link to="/app/collection" className="nav-link">
+                  <FaBookmark /> Collection
+                </Link>
+              </NavItem>
+              </>
             ) : (
               <>
                 <NavItem>
@@ -82,7 +94,7 @@ export class Nav extends Component {
                 </NavItem>
               </>
             )}
-            <UncontrolledDropdown nav inNavbar>
+            {/* <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 Options
               </DropdownToggle>
@@ -92,7 +104,7 @@ export class Nav extends Component {
                 <DropdownItem divider />
                 <DropdownItem>Reset</DropdownItem>
               </DropdownMenu>
-            </UncontrolledDropdown>
+            </UncontrolledDropdown> */}
           </MatNav>
         </Collapse>
       </Navbar>

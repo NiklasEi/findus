@@ -11,18 +11,48 @@ provider:
   stage: dev
   runtime: nodejs10.x
   region: ${env:MY_AWS_REGION}
-  memorySize: 512
-
+  memorySize: 256
+  environment:
+    DYNAMODB_TABLE_COLLECTIONS: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE_BOOKMARKS: ${self:service}-${opt:stage, self:provider.stage}-bookmarks
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - s3:*
-      Resource: "*"
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_COLLECTIONS}"
+
+custom:
+  cors:
+    default:
+      origin: ${env:ORIGIN}
+      headers:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+      allowCredentials: true
+  authorizer:
+    users:
+      name: authorizerFunc
+      type: token
+      identitySource: method.request.header.Authorization
+      identityValidationExpression: '^Bearer [\w-]+\.[\w-]+\.[\w-]+$'
+
+package:
+  excludeDevDependencies: false
+  exclude:
+    - .env.**
+    - .gitignore
 
 functions:
   - ${file(functions/auth.yml)}
-  - ${file(functions/posts.yml)}
-  - ${file(functions/time.yml)}
   - ${file(functions/app.yml)}
 
 resources:
@@ -61,6 +91,38 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: "ApiGatewayRestApi"
+    CollectionsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_COLLECTIONS}
+    BookmarksDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_BOOKMARKS}
     # MySnsSubscription:
     #   Type: AWS::SNS::Subscription
     #   Properties:

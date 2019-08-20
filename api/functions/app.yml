@@ -1,21 +1,44 @@
-getCollections:
-  handler: functions/app/collections.get
+create:
+  handler: functions/app/create.create
   events:
     - http:
-        path: app/collections
+        path: app/user/{user}/collections
+        method: post
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+list:
+  handler: functions/app/list.list
+  events:
+    - http:
+        path: app/user/{user}/collections
         method: get
-        cors:
-          origins:
-            - http://localhost:8000
-            - ${env:MY_DOMAIN}
-          headers:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
-          allowCredentials: true
-        authorizer: 
-          name: authorizerFunc
-          type: token
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+get:
+  handler: functions/app/get.get
+  events:
+    - http:
+        path: app/user/{user}/collections/{id}
+        method: get
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+update:
+  handler: functions/app/update.update
+  events:
+    - http:
+        path: app/user/{user}/collections/{id}
+        method: put
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+delete:
+  handler: functions/app/delete.delete
+  events:
+    - http:
+        path: app/user/{user}/collections/{id}
+        method: delete
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}

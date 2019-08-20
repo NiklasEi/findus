@@ -1,6 +1,0 @@
-currentTime:
-  handler: functions/heyho/handler.endpoint
-  events:
-    - http:
-        path: ping/ping
-        method: get

@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import Helmet from "react-helmet";
 import Nav from "../components/nav";
 import Footer from "../components/footer";
+import {NotificationContainer} from 'react-notifications';
 
+import 'react-notifications/lib/notifications.css';
 const faviconSizes = [32, 64, 256];
 
 export class Layout extends Component {
   render() {
     return (
-      <>
+      <div className={this.props.className ? this.props.className : "layout"}>
         <Helmet>
           {faviconSizes.map(size => (
             <link
@@ -22,8 +24,9 @@ export class Layout extends Component {
         </Helmet>
         <Nav />
         <div className="content">{this.props.children}</div>
+        <NotificationContainer/>
         <Footer />
-      </>
+      </div>
     );
   }
 }

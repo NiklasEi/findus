@@ -1,4 +1,4 @@
-create:
+createCollection:
   handler: functions/app/collections/create.create
   events:
     - http:
@@ -7,7 +7,7 @@ create:
         cors: ${self:custom.cors.default}
         authorizer: ${self:custom.authorizer.users}
 
-list:
+listCollections:
   handler: functions/app/collections/list.list
   events:
     - http:
@@ -16,29 +16,29 @@ list:
         cors: ${self:custom.cors.default}
         authorizer: ${self:custom.authorizer.users}
 
-get:
+getCollection:
   handler: functions/app/collections/get.get
   events:
     - http:
-        path: app/user/{user}/collections/{id}
+        path: app/user/{user}/collections/{collection}
         method: get
         cors: ${self:custom.cors.default}
         authorizer: ${self:custom.authorizer.users}
 
-update:
+updateCollection:
   handler: functions/app/collections/update.update
   events:
     - http:
-        path: app/user/{user}/collections/{id}
+        path: app/user/{user}/collections/{collection}
         method: put
         cors: ${self:custom.cors.default}
         authorizer: ${self:custom.authorizer.users}
 
-delete:
+deleteCollection:
   handler: functions/app/collections/delete.delete
   events:
     - http:
-        path: app/user/{user}/collections/{id}
+        path: app/user/{user}/collections/{collection}
         method: delete
         cors: ${self:custom.cors.default}
         authorizer: ${self:custom.authorizer.users}

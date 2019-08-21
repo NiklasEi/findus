@@ -30,7 +30,7 @@ module.exports.list = (event, context, callback) => {
     const params = {
       RequestItems: {
         [process.env.DYNAMODB_TABLE_COLLECTIONS]: {
-          Keys: result.Item.collections.map(collection => {
+          Keys: result.Item.collections.values.map(collection => {
             return {id: collection};
           }),
           ExpressionAttributeValues: {
@@ -45,7 +45,11 @@ module.exports.list = (event, context, callback) => {
         console.error(error);
         callback(null, {
           statusCode: error.statusCode || 501,
-          headers: { "Content-Type": "text/plain" },
+          headers: {
+            'Access-Control-Allow-Origin': process.env.ORIGIN,
+            'Access-Control-Allow-Credentials': true,
+            'Content-Type': "text/plain"
+          },
           body: "Couldn't fetch the collections."
         });
         return;
@@ -56,6 +60,10 @@ module.exports.list = (event, context, callback) => {
       // create a response
       const response = {
         statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': process.env.ORIGIN,
+          'Access-Control-Allow-Credentials': true
+        },
         body: JSON.stringify(collections.Responses[process.env.DYNAMODB_TABLE_COLLECTIONS])
       };
       callback(null, response);

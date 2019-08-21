@@ -1,0 +1,44 @@
+createBookmark:
+  handler: functions/app/bookmarks/create.create
+  events:
+    - http:
+        path: app/user/{user}/collections/{collection}/bookmarks
+        method: post
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+listBookmarks:
+  handler: functions/app/bookmarks/list.list
+  events:
+    - http:
+        path: app/user/{user}/collections/{collection}/bookmarks
+        method: get
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+getBookmark:
+  handler: functions/app/bookmarks/get.get
+  events:
+    - http:
+        path: app/user/{user}/bookmarks/{bookmark}
+        method: get
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+updateBookmark:
+  handler: functions/app/bookmarks/update.update
+  events:
+    - http:
+        path: app/user/{user}/bookmarks/{bookmark}
+        method: put
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}
+
+deleteBookmark:
+  handler: functions/app/bookmarks/delete.delete
+  events:
+    - http:
+        path: app/user/{user}/bookmarks/{bookmark}
+        method: delete
+        cors: ${self:custom.cors.default}
+        authorizer: ${self:custom.authorizer.users}

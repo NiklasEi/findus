@@ -9,17 +9,17 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.get = (event, context, callback) => {
   const params = {
-    TableName: process.env.DYNAMODB_TABLE_COLLECTIONS,
+    TableName: process.env.DYNAMODB_TABLE_BOOKMARKS,
     Key: {
-      id: event.pathParameters.collection,
+      id: event.pathParameters.bookmark,
     },
     ExpressionAttributeValues: {
       ':owner': event.pathParameters.user,
     },
-    ConditionExpression: 'collectionOwner = :owner',
+    ConditionExpression: 'bookmarkOwner = :owner',
   };
 
-  // fetch collection from the database
+  // fetch bookmark from the database
   dynamoDb.get(params, (error, result) => {
     // handle potential errors
     if (error) {
@@ -31,7 +31,7 @@ module.exports.get = (event, context, callback) => {
           'Access-Control-Allow-Credentials': true,
           'Content-Type': "text/plain"
         },
-        body: 'Couldn\'t fetch the collection.',
+        body: 'Couldn\'t fetch the bookmark.',
       });
       return;
     }

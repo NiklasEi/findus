@@ -7,7 +7,7 @@ export class Login extends Component {
     return (
       <Layout>
         <div className="flexCenter">
-          <LoginForm />
+          <LoginForm redirect="/app/profile" />
         </div>
       </Layout>
     );

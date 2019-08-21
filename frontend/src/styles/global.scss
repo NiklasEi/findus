@@ -1,10 +1,10 @@
-html, body, #___gatsby {
+html, body, #___gatsby, #gatsby-focus-wrapper, .layout {
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
-body {
+.layout.index {
   background-image: url("https://images.unsplash.com/photo-1502700807168-484a3e7889d0");
   background-position: center;
   background-repeat: no-repeat;
@@ -15,7 +15,7 @@ nav .navbar {
   background-color: lightblue;
 }
 
-#gatsby-focus-wrapper {
+.layout {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -23,13 +23,13 @@ nav .navbar {
   justify-content: space-between;
 }
 
-#gatsby-focus-wrapper .content,
+.layout .content,
 nav, footer {
   width: 100%;
 }
 
-#gatsby-focus-wrapper .content {
-  height: 100%;
+.layout .content {
+  flex-grow: 1;
   position: relative;
 }
 
@@ -53,6 +53,10 @@ form {
 
 a, a:hover, a:active {
   text-decoration: none;
+}
+
+textarea {
+  resize: none;
 }
 
 @-webkit-keyframes icon-spin {

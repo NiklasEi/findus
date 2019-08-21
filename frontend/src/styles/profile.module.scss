@@ -1,0 +1,26 @@
+.collections {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.collections > div {
+  width: 250px;
+  height: 250px;
+  max-width: 100%;
+  border-radius: 5px;
+  margin: 10px;
+  background-color: lightblue;
+}
+
+.item {
+  position: relative;
+}
+
+.item a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}

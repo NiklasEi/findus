@@ -79,6 +79,7 @@ export class LoginForm extends Component {
   }
 
   onFailure(err) {
+    console.error(err)
     this.resetState(err.message);
   }
 

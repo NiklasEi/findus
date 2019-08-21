@@ -11,11 +11,15 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-  if (typeof data.title !== "string") {
+  if (typeof data.title !== "string" || typeof data.description !== "string") {
     console.error("Validation Failed");
     callback(null, {
       statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
+      headers: {
+        'Access-Control-Allow-Origin': process.env.ORIGIN,
+        'Access-Control-Allow-Credentials': true,
+        'Content-Type': "text/plain"
+      },
       body: "Couldn't create the collection."
     });
     return;
@@ -28,10 +32,10 @@ module.exports.create = (event, context, callback) => {
     Item: {
       id: newId,
       title: data.title,
+      description: data.description,
       collectionOwner: event.pathParameters.user,
       createdAt: timestamp,
-      updatedAt: timestamp,
-      bookmarks: []
+      updatedAt: timestamp
     }
   };
 
@@ -41,10 +45,10 @@ module.exports.create = (event, context, callback) => {
       id: event.pathParameters.user
     },
     ExpressionAttributeValues: {
-      ":new": [newId],
+      ":new": dynamoDb.createSet([newId]),
       ":updatedAt": timestamp
     },
-    UpdateExpression: "ADD collections = :new SET updatedAt = :updatedAt",
+    UpdateExpression: "ADD collections :new SET updatedAt = :updatedAt",
     ReturnValues: "NONE"
   };
 
@@ -54,8 +58,7 @@ module.exports.create = (event, context, callback) => {
       id: event.pathParameters.user,
       createdAt: timestamp,
       updatedAt: timestamp,
-      bookmarks: [],
-      collections: [newId]
+      collections: dynamoDb.createSet([newId])
     }
   };
 
@@ -80,7 +83,11 @@ module.exports.create = (event, context, callback) => {
           console.error(error);
           callback(null, {
             statusCode: error.statusCode || 501,
-            headers: { "Content-Type": "text/plain" },
+            headers: {
+              'Access-Control-Allow-Origin': process.env.ORIGIN,
+              'Access-Control-Allow-Credentials': true,
+              'Content-Type': "text/plain"
+            },
             body: "Failed to add the collection to the user."
           });
           return;
@@ -91,18 +98,23 @@ module.exports.create = (event, context, callback) => {
             console.error(error);
             callback(null, {
               statusCode: error.statusCode || 501,
-              headers: { "Content-Type": "text/plain" },
+              headers: {
+                'Access-Control-Allow-Origin': process.env.ORIGIN,
+                'Access-Control-Allow-Credentials': true,
+                'Content-Type': "text/plain"
+              },
               body: "Couldn't create the collection."
             });
             return;
           }
 
-          // to the outside the id of the collection is only the second part of the id
-          newCollection.Item.id = newCollection.Item.id.split(".")[1];
-
           // create a response
           const response = {
             statusCode: 200,
+            headers: {
+              'Access-Control-Allow-Origin': process.env.ORIGIN,
+              'Access-Control-Allow-Credentials': true
+            },
             body: JSON.stringify(newCollection.Item)
           };
           callback(null, response);
@@ -117,7 +129,11 @@ module.exports.create = (event, context, callback) => {
         console.error(error);
         callback(null, {
           statusCode: error.statusCode || 501,
-          headers: { "Content-Type": "text/plain" },
+          headers: {
+            'Access-Control-Allow-Origin': process.env.ORIGIN,
+            'Access-Control-Allow-Credentials': true,
+            'Content-Type': "text/plain"
+          },
           body: "Couldn't create the collection."
         });
         return;
@@ -126,6 +142,10 @@ module.exports.create = (event, context, callback) => {
       // create a response
       const response = {
         statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': process.env.ORIGIN,
+          'Access-Control-Allow-Credentials': true
+        },
         body: JSON.stringify(newCollection.Item)
       };
       callback(null, response);

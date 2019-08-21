@@ -62,7 +62,8 @@ package:
 
 functions:
   - ${file(functions/auth.yml)}
-  - ${file(functions/app.yml)}
+  - ${file(functions/collections.yml)}
+  - ${file(functions/bookmarks.yml)}
 
 resources:
   Resources:

@@ -12,38 +12,38 @@ module.exports.update = (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   // validation
-  if (typeof data.title !== 'string' || typeof data.description !== "string") {
-    console.error('Validation Failed');
+  if (typeof data.lable !== "string" || typeof data.url !== "string") {
+    console.error("Validation Failed");
     callback(null, {
       statusCode: 400,
       headers: {
-        'Access-Control-Allow-Origin': process.env.ORIGIN,
-        'Access-Control-Allow-Credentials': true,
-        'Content-Type': "text/plain"
+        "Access-Control-Allow-Origin": process.env.ORIGIN,
+        "Access-Control-Allow-Credentials": true,
+        "Content-Type": "text/plain"
       },
-      body: 'Couldn\'t update the collection.',
+      body: "Couldn't create the collection."
     });
     return;
   }
 
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE_COLLECTIONS,
+  const updateBookmark = {
+    TableName: process.env.DYNAMODB_TABLE_BOOKMARKS,
     Key: {
-      id: event.pathParameters.collection,
+      id: event.pathParameters.bookmark,
     },
     ExpressionAttributeValues: {
       ':owner': event.pathParameters.user,
-      ':title': data.title,
-      ':description': data.description,
+      ':lable': data.lable,
+      ':url': data.url,
       ':updatedAt': timestamp,
     },
     ConditionExpression: 'collectionOwner = :owner',
-    UpdateExpression: 'SET title = :title, description = :description, updatedAt = :updatedAt',
+    UpdateExpression: 'SET lable = :lable, url = :url, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',
   };
 
   // update the collection in the database
-  dynamoDb.update(params, (error, result) => {
+  dynamoDb.update(updateBookmark, (error, result) => {
     // handle potential errors
     if (error) {
       console.error(error);
@@ -54,7 +54,7 @@ module.exports.update = (event, context, callback) => {
           'Access-Control-Allow-Credentials': true,
           'Content-Type': "text/plain"
         },
-        body: 'Couldn\'t update the collection.',
+        body: 'Couldn\'t update the bookmark.',
       });
       return;
     }

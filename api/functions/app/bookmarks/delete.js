@@ -1,42 +1,40 @@
-'use strict';
+"use strict";
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require("aws-sdk"); // eslint-disable-line import/no-extraneous-dependencies
 AWS.config.apiVersions = {
-  dynamodb: '2012-08-10'
+  dynamodb: "2012-08-10"
 };
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.delete = (event, context, callback) => {
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE_COLLECTIONS,
+  const deleteBookmark = {
+    TableName: process.env.DYNAMODB_TABLE_BOOKMARKS,
     Key: {
-      id: event.pathParameters.collection,
+      id: event.pathParameters.bookmark
     },
     ExpressionAttributeValues: {
-      ':owner': event.pathParameters.user,
+      ":owner": event.pathParameters.user
     },
-    ConditionExpression: 'collectionOwner = :owner',
+    ConditionExpression: "bookmarkOwner = :owner",
     ReturnValues: "ALL_OLD"
   };
 
   // delete the collection from the database
-  dynamoDb.delete(params, (error, data) => {
-    // handle potential errors
+  dynamoDb.delete(deleteBookmark, (error, data) => {
     if (error) {
       console.error(error);
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: {
-          'Access-Control-Allow-Origin': process.env.ORIGIN,
-          'Access-Control-Allow-Credentials': true,
-          'Content-Type': "text/plain"
+          "Access-Control-Allow-Origin": process.env.ORIGIN,
+          "Access-Control-Allow-Credentials": true,
+          "Content-Type": "text/plain"
         },
-        body: 'Couldn\'t remove the collection.',
+        body: "Couldn't delete the bookmark."
       });
       return;
     }
-
 
     console.log("deleted...");
     console.log(data);
@@ -48,20 +46,22 @@ module.exports.delete = (event, context, callback) => {
           "Access-Control-Allow-Credentials": true,
           "Content-Type": "text/plain"
         },
-        body: "Couldn't delete the collection."
+        body: "Couldn't delete the bookmark."
       });
       return;
     }
 
-    const updateUser = {
-      TableName: process.env.DYNAMODB_TABLE_USERS,
+    const updateCollection = {
+      TableName: process.env.DYNAMODB_TABLE_COLLECTIONS,
       Key: {
-        id: event.pathParameters.user
+        id: data.id
       },
       ExpressionAttributeValues: {
+        ":owner": event.pathParameters.user,
         ":updatedAt": timestamp,
-        ":old": dynamoDb.createSet([event.pathParameters.collection])
+        ":old": dynamoDb.createSet([event.pathParameters.bookmark])
       },
+      ConditionExpression: "collectionOwner = :owner",
       UpdateExpression: "SET updatedAt = :updatedAt DELETE bookmarks = :old ",
       ReturnValues: "ALL_NEW"
     };
@@ -93,15 +93,5 @@ module.exports.delete = (event, context, callback) => {
       };
       callback(null, response);
     });
-    // create a response
-    const response = {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': process.env.ORIGIN,
-        'Access-Control-Allow-Credentials': true
-      },
-      body: JSON.stringify({status: "ok"}),
-    };
-    callback(null, response);
   });
 };

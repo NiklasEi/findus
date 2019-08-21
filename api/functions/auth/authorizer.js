@@ -131,6 +131,16 @@ function policy(principalId, userOrArn, allow, errorMessage) {
           Action: "execute-api:Invoke",
           Effect: allow ? "Allow" : "Deny",
           Resource: /^arn:/.test(userOrArn) ? userOrArn : `arn:aws:execute-api:${region}:406011587132:${process.env.AWS_GATEWAY_API_ID}/${process.env.AWS_STAGE}/*/app/user/${userOrArn}/collections/*`
+        },
+        {
+          Action: "execute-api:Invoke",
+          Effect: allow ? "Allow" : "Deny",
+          Resource: /^arn:/.test(userOrArn) ? userOrArn : `arn:aws:execute-api:${region}:406011587132:${process.env.AWS_GATEWAY_API_ID}/${process.env.AWS_STAGE}/*/app/user/${userOrArn}/collections/*/bookmarks`
+        },
+        {
+          Action: "execute-api:Invoke",
+          Effect: allow ? "Allow" : "Deny",
+          Resource: /^arn:/.test(userOrArn) ? userOrArn : `arn:aws:execute-api:${region}:406011587132:${process.env.AWS_GATEWAY_API_ID}/${process.env.AWS_STAGE}/*/app/user/${userOrArn}/bookmarks/*`
         }
       ]
     },

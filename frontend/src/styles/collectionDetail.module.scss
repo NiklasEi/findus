@@ -4,6 +4,41 @@
   width: 100%;
 }
 
+.header {
+  height: 70px;
+  margin: 0px 10%;
+  padding: 2px;
+}
+
 .row {
   height: 50px;
+  padding: 2px;
+  border-radius: 10px;
+  border-top-left-radius: 10px;
+  margin: 0px 10%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: white;
+  border-bottom: 1px solid #D8D8D8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
+  transition: background 0.2s;
+}
+
+.row > img, .row > svg {
+  margin: 0px 5px;
+}
+
+.row > span {
+  flex-grow: 1;
+}
+
+.row:nth-child(even) {
+  transform: perspective(100px) rotateX(1deg) translateY(2px) scale(1.001);
+  background: linear-gradient(to bottom,  #ffffff 0%,#EFEFEF 100%);
+}
+
+.row:nth-child(odd) {
+  transform: perspective(100px) rotateX(-1deg) translateY(3px);
+  background: linear-gradient(to top,  #ffffff 0%,#EFEFEF 100%);
 }

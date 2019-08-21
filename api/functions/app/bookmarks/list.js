@@ -24,7 +24,7 @@ module.exports.list = (event, context, callback) => {
       console.error(error);
       sendCallback(null, {
         statusCode: error.statusCode || 501,
-        body: JSON.stringify({"Couldn't fetch the collection."})
+        body: JSON.stringify({message: "Couldn't fetch the collection."})
       }, callback);
       return;
     }
@@ -67,7 +67,7 @@ module.exports.list = (event, context, callback) => {
 };
 
 function sendCallback(err, res, callback) {
-  response.headers = {
+  res.headers = {
     "Access-Control-Allow-Origin": process.env.ORIGIN,
     "Access-Control-Allow-Credentials": true
   }

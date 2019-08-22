@@ -7,12 +7,12 @@
     text-align: center;
     padding: 10px 10px 0px 10px;
     max-height: 80px;
-    overflow: scroll;
+    overflow: hidden;
   }
   p {
     padding: 10px;
     max-height: 130px;
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
   form {
     width: 100%;
@@ -21,7 +21,7 @@
     z-index: 1;
     textarea {
       width: 100%;
-      height: 75%;
+      height: 70%;
     }
     input {
       width: 100%;

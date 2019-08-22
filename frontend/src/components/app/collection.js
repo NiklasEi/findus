@@ -77,6 +77,7 @@ export class Collection extends Component {
         NotificationManager.info("Collection edited", null, 5000);
         this.setState({
           submitting: false,
+          editing: false,
           collection: response.data,
         });
       })
@@ -131,7 +132,7 @@ export class Collection extends Component {
             >
               {this.state.submitting ? (
                 <span>
-                  Updating...&nbsp;
+                  Updating&nbsp;
                   <FaSpinner size="1.2em" className="icon-spin" />
                 </span>
               ) : (

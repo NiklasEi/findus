@@ -33,6 +33,11 @@ export class Profile extends Component {
     this.setState({ collections });
   }
 
+  delete(id) {
+    let collections = [...this.state.collections];
+    this.setState({ collections: collections.filter(collection => collection.id !== id) });
+  }
+
   render() {
     return (
       <div className={style.container}>
@@ -45,7 +50,7 @@ export class Profile extends Component {
                   to={"/app/collection/" + collection.id}
                   state={{ collection: { ...collection } }}
                 ></Link>
-                <Collection collection={collection} key={collection.id} />
+                <Collection collection={collection} key={collection.id} delete={this.delete.bind(this, collection.id)} />
               </div>
             );
           }) : (

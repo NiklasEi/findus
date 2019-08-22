@@ -5,6 +5,7 @@ import style from "../../styles/profile.module.scss";
 import Collection from "./collection";
 import NewCollection from "./newCollection";
 import { FaSpinner } from "react-icons/fa";
+import {NotificationManager} from 'react-notifications';
 
 export class Profile extends Component {
   constructor(props) {
@@ -19,10 +20,12 @@ export class Profile extends Component {
     list()
       .then(response => {
         response.data.sort((a, b) => (a.title > b.title ? 1 : -1));
-        this.setState({ collections: response.data, loaded: true });
+        this.setState({ loaded: true });
       })
       .catch(error => {
+        NotificationManager.error("Failed to retrieve the collections", "Error")
         console.error(error);
+        this.setState({ loaded: true });
       });
   }
 

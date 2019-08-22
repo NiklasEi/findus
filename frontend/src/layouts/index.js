@@ -26,9 +26,9 @@ export class Layout extends Component {
         <Nav />
         <div className="content">
           {this.props.children}
-          <NotificationContainer />
         </div>
         <Footer />
+        <NotificationContainer />
       </div>
     );
   }

@@ -4,4 +4,4 @@
   publish = "frontend/public"
 
 [context.production]
-  environment = { GATSBY_AWS_COGNITO_USER_POOL_ID = "eu-central-1_FvQw3QTFr", GATSBY_AWS_COGNITO_CLIENT_ID = "2vhfrlr4ul40v6haf9ov9ov5oi", GATSBY_GOOGLE_ANALYTICS_ID = "Iamnotvalid", GATSBY_STAGE = "production", GATSBY_AWS_API_ID = "pkoljvc2a8" }
+  environment = { GATSBY_AWS_COGNITO_USER_POOL_ID = "eu-central-1_FvQw3QTFr", GATSBY_AWS_COGNITO_CLIENT_ID = "2vhfrlr4ul40v6haf9ov9ov5oi", GATSBY_AWS_REGION="eu-central-1", GATSBY_GOOGLE_ANALYTICS_ID = "Iamnotvalid", GATSBY_STAGE = "production", GATSBY_AWS_API_ID = "pkoljvc2a8" }

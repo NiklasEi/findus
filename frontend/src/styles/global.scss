@@ -1,4 +1,7 @@
-html, body, #___gatsby, #gatsby-focus-wrapper {
+html,
+body,
+#___gatsby,
+#gatsby-focus-wrapper {
   margin: 0px;
   padding: 0px;
   height: 100%;
@@ -25,10 +28,16 @@ nav .navbar {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+
+  div.notification-container {
+    padding-top: 70px;
+    overflow: hidden;
+  }
 }
 
 .layout .content,
-nav, footer {
+nav,
+footer {
   width: 100%;
 }
 
@@ -48,10 +57,12 @@ nav, footer {
 
 .icon-spin {
   -webkit-animation: icon-spin 2s infinite linear;
-          animation: icon-spin 2s infinite linear;
+  animation: icon-spin 2s infinite linear;
 }
 
-a, a:hover, a:active {
+a,
+a:hover,
+a:active {
   text-decoration: none;
 }
 
@@ -62,21 +73,21 @@ textarea {
 @-webkit-keyframes icon-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 @keyframes icon-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }

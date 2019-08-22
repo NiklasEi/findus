@@ -36,11 +36,11 @@ module.exports.delete = (event, context, callback) => {
       return;
     }
 
-    console.log("deleted...");
-    console.log(data);
-    if (!data.id) {
+    console.log("Deleted bookmark... continuing to remove from collection")
+
+    if (!data.Attributes || !data.Attributes.collection) {
       callback(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 501,
         headers: {
           "Access-Control-Allow-Origin": process.env.ORIGIN,
           "Access-Control-Allow-Credentials": true,
@@ -51,10 +51,11 @@ module.exports.delete = (event, context, callback) => {
       return;
     }
 
+    const timestamp = new Date().getTime();
     const updateCollection = {
       TableName: process.env.DYNAMODB_TABLE_COLLECTIONS,
       Key: {
-        id: data.id
+        id: data.Attributes.collection
       },
       ExpressionAttributeValues: {
         ":owner": event.pathParameters.user,
@@ -62,8 +63,8 @@ module.exports.delete = (event, context, callback) => {
         ":old": dynamoDb.createSet([event.pathParameters.bookmark])
       },
       ConditionExpression: "collectionOwner = :owner",
-      UpdateExpression: "SET updatedAt = :updatedAt DELETE bookmarks = :old ",
-      ReturnValues: "ALL_NEW"
+      UpdateExpression: "SET updatedAt = :updatedAt DELETE bookmarks :old ",
+      ReturnValues: "NONE"
     };
 
     // update the collection in the database
@@ -77,7 +78,7 @@ module.exports.delete = (event, context, callback) => {
             "Access-Control-Allow-Credentials": true,
             "Content-Type": "text/plain"
           },
-          body: "Couldn't update the collection."
+          body: JSON.stringify({message: "Couldn't update the collection, but the bookmark might be deleted!."})
         });
         return;
       }
@@ -89,7 +90,7 @@ module.exports.delete = (event, context, callback) => {
           "Access-Control-Allow-Origin": process.env.ORIGIN,
           "Access-Control-Allow-Credentials": true
         },
-        body: JSON.stringify(result.Attributes)
+        body: JSON.stringify(data.Attributes)
       };
       callback(null, response);
     });

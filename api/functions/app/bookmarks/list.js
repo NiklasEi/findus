@@ -28,7 +28,14 @@ module.exports.list = (event, context, callback) => {
       }, callback);
       return;
     }
-    console.log(result);
+    if(!result.Item.bookmarks) {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify([])
+      };
+      sendCallback(null, response, callback);
+      return;
+    }
     const params = {
       RequestItems: {
         [process.env.DYNAMODB_TABLE_BOOKMARKS]: {

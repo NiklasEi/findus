@@ -31,14 +31,15 @@ module.exports.update = (event, context, callback) => {
     Key: {
       id: event.pathParameters.bookmark,
     },
+    ExpressionAttributeNames: {'#url' : 'url'},
     ExpressionAttributeValues: {
       ':owner': event.pathParameters.user,
       ':lable': data.lable,
       ':url': data.url,
       ':updatedAt': timestamp,
     },
-    ConditionExpression: 'collectionOwner = :owner',
-    UpdateExpression: 'SET lable = :lable, url = :url, updatedAt = :updatedAt',
+    ConditionExpression: 'bookmarkOwner = :owner',
+    UpdateExpression: 'SET lable = :lable, #url = :url, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',
   };
 

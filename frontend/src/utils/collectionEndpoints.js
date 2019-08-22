@@ -6,6 +6,7 @@ import axios from "axios";
  * Prepare an authorized axios request
  * @param {string} method The request method
  * @param {string} url The request url
+ * @param {object} data The request url
  */
 function authorizedRequest(method, url, data) {
   return getIdToken().then(token => {

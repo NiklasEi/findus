@@ -3,6 +3,10 @@
   background-color: rgba($color: #ffffff, $alpha: 0.7);
 }
 
+.form {
+  max-width: 500px;
+}
+
 // This shit's not working
 // Firefox adds browser css to autoselected input values...
 .input input:-internal-autofill-selected {

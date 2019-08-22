@@ -6,24 +6,28 @@ import axios from "axios";
  * Prepare an authorized axios request
  * @param {string} method The request method
  * @param {string} url The request url
+ * @param {object} data data to send
  */
-function authorizedRequest(method, url) {
+function authorizedRequest(method, url, data) {
   return getIdToken().then(token => {
-    return axios({
+    let options = {
       url: url.replace("%userId%", token.payload.sub),
       method: method,
       withCredentials: true,
       headers: { Authorization: "Bearer " + token.getJwtToken() }
-    });
+    }
+    if (data) options.data = data;
+    return axios(options);
   });
 }
 
 /**
  * Create a new bookmark in a specific collection
  * @param {string} collectionId 
+ * @param {object} data new bookmark
  */
-function create(collectionId) {
-  return authorizedRequest("post", buildApiUrl(`app/user/%userId%/collections/${collectionId}/bookmarks`));
+function create(collectionId, data) {
+  return authorizedRequest("post", buildApiUrl(`app/user/%userId%/collections/${collectionId}/bookmarks`), data);
 }
 
 /**
@@ -53,9 +57,10 @@ function list(collectionId) {
 /**
  * Update a specific bookmark
  * @param {string} bookmarkId 
+ * @param {object} data new bookmark
  */
-function update(bookmarkId) {
-  return authorizedRequest("put", buildApiUrl(`app/user/%userId%/bookmarks/${bookmarkId}`));
+function update(bookmarkId, data) {
+  return authorizedRequest("put", buildApiUrl(`app/user/%userId%/bookmarks/${bookmarkId}`), data);
 }
 
 export { create, remove, get, list, update };

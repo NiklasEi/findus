@@ -27,6 +27,7 @@ export class Collection extends Component {
     return collection ? (
       <div className={style.collection}>
         <p>{collection.title}</p>
+        <span>{collection.bookmarks.length} bookmarks</span>
       </div>
     ) : (
       <div className="flexCenter">

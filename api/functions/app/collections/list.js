@@ -18,15 +18,31 @@ module.exports.list = (event, context, callback) => {
   dynamoDb.get(userFile, (error, result) => {
     if (error) {
       console.error(error);
+      callback(null, {
+        statusCode: error.statusCode || 501,
+        headers: {
+          'Access-Control-Allow-Origin': process.env.ORIGIN,
+          'Access-Control-Allow-Credentials': true,
+          'Content-Type': "text/plain"
+        },
+        body: "Couldn't fetch the user file."
+      });
+      return;
+    }
+    if(!result.Item || !result.Item.collections || !result.Item.collections.values) {
       // assuming the user simply does not have collections yet
       const response = {
         statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': process.env.ORIGIN,
+          'Access-Control-Allow-Credentials': true
+        },
         body: JSON.stringify([])
       };
       callback(null, response);
       return;
     }
-    console.log(result);
+
     const params = {
       RequestItems: {
         [process.env.DYNAMODB_TABLE_COLLECTIONS]: {
@@ -55,7 +71,7 @@ module.exports.list = (event, context, callback) => {
         return;
       }
 
-      console.log(collections);
+      // console.log(collections);
 
       // create a response
       const response = {

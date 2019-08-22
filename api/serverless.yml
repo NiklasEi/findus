@@ -53,6 +53,7 @@ custom:
     - dynamodb:UpdateItem
     - dynamodb:DeleteItem
     - dynamodb:BatchGetItem
+    - dynamodb:BatchWriteItem
 
 package:
   excludeDevDependencies: false

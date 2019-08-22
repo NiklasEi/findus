@@ -20,7 +20,7 @@ export class Profile extends Component {
     list()
       .then(response => {
         response.data.sort((a, b) => (a.title > b.title ? 1 : -1));
-        this.setState({ loaded: true });
+        this.setState({ collections: response.data, loaded: true });
       })
       .catch(error => {
         NotificationManager.error("Failed to retrieve the collections", "Error")

@@ -1,2 +1,2 @@
 # Findus
-***Manage, share and syncronize your bookmarks***
+*Manage, share and syncronize your bookmarks*

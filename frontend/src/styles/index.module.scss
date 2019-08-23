@@ -1,14 +1,32 @@
 .div, .form {
   padding: 10px;
-  background-color: rgba($color: #ffffff, $alpha: 0.7);
+  background-color: rgba($color: #ffffff, $alpha: 0.9);
+}
+
+.div {
+  text-align: center;
 }
 
 .form {
   max-width: 500px;
 }
 
+.getStarted {
+  text-align: left;
+}
+
 // This shit's not working
 // Firefox adds browser css to autoselected input values...
 .input input:-internal-autofill-selected {
-  background-color: rgba($color: #ff0404, $alpha: 0.5) !important;
+  background-color: rgba($color: #ff0404, $alpha: 0.7) !important;
+}
+
+.pwdok {
+  display: block;
+  color: green;
+}
+
+.pwdnotok {
+  display: block;
+  color: red;
 }

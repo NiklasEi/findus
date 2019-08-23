@@ -5,7 +5,7 @@ import Footer from "../components/footer";
 import { NotificationContainer } from "react-notifications";
 
 import "react-notifications/lib/notifications.css";
-const faviconSizes = [32, 64, 256];
+const faviconSizes = [16, 32, 40];
 
 export class Layout extends Component {
   render() {

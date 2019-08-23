@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "gatsby";
 import { FaSpinner } from "react-icons/fa";
+import { NotificationManager } from "react-notifications";
 
 export class SignupForm extends Component {
   constructor(props) {
@@ -14,9 +15,21 @@ export class SignupForm extends Component {
       user: {},
       passwordVerificationError: "",
       validEmail: false,
+      validate: {
+        minLength: false,
+        lowerCase: false,
+        upperCase: false,
+        specialCharacters: false,
+      },
     };
     this.AmazonCognitoIdentity = require("amazon-cognito-identity-js");
     this.change = this.change.bind(this);
+    this.validation = {
+      minLength: "be at least 8 characters long",
+      lowerCase: "contain at least one lower case letter",
+      upperCase: "contain at least one upper case letter",
+      specialCharacters: "contain at least one special character",
+    };
   }
 
   change(event) {
@@ -24,14 +37,24 @@ export class SignupForm extends Component {
     let user = this.state.user;
     user[input.name] = input.value;
     if (input.name.includes("password")) {
+      let state = {};
       if (this.verifyPassword(input)) {
-        this.setState({ user: user, passwordVerificationError: "" });
+        state = { user: user, passwordVerificationError: "" };
       } else {
-        this.setState({
+        state = {
           user: user,
           passwordVerificationError: "Passwords don't match",
-        });
+        };
       }
+      if (input.name === "password") {
+        state.validate = {
+          minLength: input.value.length >= 8,
+          lowerCase: /[a-z]/.test(input.value),
+          upperCase: /[A-Z]/.test(input.value),
+          specialCharacters: /[^A-Za-z0-9]/.test(input.value),
+        };
+      }
+      this.setState(state);
     } else if (input.name === "email") {
       this.setState({
         user: user,
@@ -69,7 +92,8 @@ export class SignupForm extends Component {
       null,
       function(err, result) {
         if (err) {
-          this.setState({ signingUp: false, message: err.message });
+          NotificationManager.error(err.message, "Failed to sign up", 20000);
+          this.setState({ signingUp: false });
           return;
         }
         console.log(result);
@@ -84,7 +108,6 @@ export class SignupForm extends Component {
         onSubmit={this.signup.bind(this)}
         className={this.props.className || style.form || ""}
       >
-        {this.state.message && <span>{this.state.message}</span>}
         <TextField
           variant="outlined"
           margin="normal"
@@ -131,7 +154,12 @@ export class SignupForm extends Component {
           label="Password"
           error={
             this.state.passwordVerificationError !== "" &&
-            this.state.passwordVerificationError.length > 0
+            this.state.passwordVerificationError.length > 0 || ! (
+            this.state.validate.minLength &&
+            this.state.validate.lowerCase &&
+            this.state.validate.upperCase &&
+            this.state.validate.specialCharacters
+            )
           }
           type="password"
           value={this.state.user.password || ""}
@@ -140,6 +168,36 @@ export class SignupForm extends Component {
           autoComplete="current-password"
           disabled={this.state.signingUp}
         />
+        {this.state.validate.minLength &&
+        this.state.validate.lowerCase &&
+        this.state.validate.upperCase &&
+        this.state.validate.specialCharacters ? (
+          <div id="password-helper-text">
+            <p>Password is OK</p>
+          </div>
+        ) : (
+          <div id="password-helper-text">
+          <p>Your password should:</p>
+            <ul>
+            {Object.keys(this.validation)
+            .filter(key => !this.state.validate[key])
+            .map(
+              function(key, index) {
+                let text = this.validation[key];
+                return (
+                  <li
+                    className={
+                      this.state.validate[key] ? style.pwdok : style.pwdnotok
+                    }
+                  >
+                    {text}
+                  </li>
+                );
+              }.bind(this)
+            )}
+            </ul>
+          </div>
+        )}
         <TextField
           variant="outlined"
           margin="normal"

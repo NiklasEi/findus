@@ -67,6 +67,17 @@ textarea {
   resize: none;
 }
 
+.navbar-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;
+  }
+}
+
 @-webkit-keyframes icon-spin {
   0% {
     -webkit-transform: rotate(0deg);

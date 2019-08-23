@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaSpinner } from "react-icons/fa";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import style from "../../styles/index.module.scss";
 
 export class ConfirmEmailForm extends Component {
   constructor(props) {
@@ -68,7 +69,10 @@ export class ConfirmEmailForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.submit}>
+      <form
+        onSubmit={this.submit}
+        className={this.props.className || style.form || ""}
+      >
         <TextField
           className={style.input}
           variant="outlined"
@@ -78,7 +82,7 @@ export class ConfirmEmailForm extends Component {
           id="username"
           label="Username"
           value={this.state.username || ""}
-          onChange={this.change.bind(this)}
+          onChange={this.onChange.bind(this)}
           name="username"
           autoComplete="username"
           disabled={this.state.verifying}
@@ -93,8 +97,8 @@ export class ConfirmEmailForm extends Component {
           name="code"
           label="Verification code"
           type="code"
-          value={this.state.password || ""}
-          onChange={this.change.bind(this)}
+          value={this.state.code || ""}
+          onChange={this.onChange.bind(this)}
           id="code"
           disabled={this.state.verifying}
         />

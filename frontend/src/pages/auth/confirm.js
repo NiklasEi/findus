@@ -5,7 +5,7 @@ import { navigate } from "gatsby";
 
 export class Confirm extends Component {
   confirmed() {
-    navigate("/auth/login")
+    navigate("/auth/login?verified=true")
   }
 
   fail(err) {

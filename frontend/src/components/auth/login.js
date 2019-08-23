@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import { Link } from "gatsby";
 import { FaSpinner } from "react-icons/fa";
 import style from "../../styles/index.module.scss";
+import {NotificationManager} from 'react-notifications';
 
 export class LoginForm extends Component {
   constructor(props) {
@@ -68,7 +69,6 @@ export class LoginForm extends Component {
   }
 
   onSuccess(result) {
-    console.log(result)
     navigate(
       this.state.redirect
         ? this.state.redirect
@@ -80,7 +80,7 @@ export class LoginForm extends Component {
 
   onFailure(err) {
     console.error(err)
-    this.resetState(err.message);
+    NotificationManager.error("Failed to log in: " + err.message, "Error", 20000)
   }
 
   resetState(message) {
@@ -93,7 +93,6 @@ export class LoginForm extends Component {
         onSubmit={this.login.bind(this)}
         className={this.props.className || style.form || ""}
       >
-        {this.state.message ? <span>{this.state.message}</span> : ""}
         <TextField
           className={style.input}
           variant="outlined"

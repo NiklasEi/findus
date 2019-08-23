@@ -58,7 +58,7 @@ export class Nav extends Component {
   render() {
     return (
       <Navbar className={style.nav} light expand="md">
-        <Link to="/" className="navbar-brand">Findus</Link>
+        <Link to="/" className="navbar-brand"><img src="/images/favicon/40x40.png" alt="icon"/>Findus</Link>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <MatNav className="ml-auto" navbar>

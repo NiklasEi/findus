@@ -103,6 +103,14 @@ export class SignupForm extends Component {
   }
 
   render() {
+    let pwdVerificationError = this.state.passwordVerificationError !== "" &&
+    this.state.passwordVerificationError.length > 0
+    let pwdValidationError = this.state.user.password && this.state.user.password.length > 0 && !(
+      this.state.validate.minLength &&
+      this.state.validate.lowerCase &&
+      this.state.validate.upperCase &&
+      this.state.validate.specialCharacters
+    )
     return (
       <form
         onSubmit={this.signup.bind(this)}
@@ -152,15 +160,7 @@ export class SignupForm extends Component {
           fullWidth
           name="password"
           label="Password"
-          error={
-            this.state.passwordVerificationError !== "" &&
-            this.state.passwordVerificationError.length > 0 || ! (
-            this.state.validate.minLength &&
-            this.state.validate.lowerCase &&
-            this.state.validate.upperCase &&
-            this.state.validate.specialCharacters
-            )
-          }
+          error={( this.state.user.password && this.state.user.password.length > 0 && pwdValidationError )}
           type="password"
           value={this.state.user.password || ""}
           onChange={this.change}
@@ -168,34 +168,32 @@ export class SignupForm extends Component {
           autoComplete="current-password"
           disabled={this.state.signingUp}
         />
-        {this.state.validate.minLength &&
-        this.state.validate.lowerCase &&
-        this.state.validate.upperCase &&
-        this.state.validate.specialCharacters ? (
+        {( this.state.user.password && this.state.user.password.length > 0 && pwdValidationError ) ? (
           <div id="password-helper-text">
-            <p>Password is OK</p>
+            <p>Your password should:</p>
+            <ul>
+              {Object.keys(this.validation)
+                .filter(key => !this.state.validate[key])
+                .map(
+                  function(key, index) {
+                    let text = this.validation[key];
+                    return (
+                      <li
+                        className={
+                          this.state.validate[key]
+                            ? style.pwdok
+                            : style.pwdnotok
+                        }
+                      >
+                        {text}
+                      </li>
+                    );
+                  }.bind(this)
+                )}
+            </ul>
           </div>
         ) : (
           <div id="password-helper-text">
-          <p>Your password should:</p>
-            <ul>
-            {Object.keys(this.validation)
-            .filter(key => !this.state.validate[key])
-            .map(
-              function(key, index) {
-                let text = this.validation[key];
-                return (
-                  <li
-                    className={
-                      this.state.validate[key] ? style.pwdok : style.pwdnotok
-                    }
-                  >
-                    {text}
-                  </li>
-                );
-              }.bind(this)
-            )}
-            </ul>
           </div>
         )}
         <TextField
@@ -206,17 +204,14 @@ export class SignupForm extends Component {
           name="passwordver"
           label="Password verification"
           helperText={this.state.passwordVerificationError}
-          error={
-            this.state.passwordVerificationError !== "" &&
-            this.state.passwordVerificationError.length > 0
-          }
+          error={pwdVerificationError}
           type="password"
           value={this.state.user.passwordver || ""}
           onChange={this.change}
           id="passwordver"
           disabled={this.state.signingUp}
         />
-        <Button type="submit" fullWidth variant="contained" color="primary">
+        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!(this.state.validEmail && (!pwdVerificationError && !pwdValidationError && this.state.user.password && this.state.user.password.length > 0 ))}>
           {this.state.signingUp ? (
             <>
               <span>Signing you up&nbsp;</span>

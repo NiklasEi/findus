@@ -80,7 +80,7 @@ resources:
         #   ReplyToEmailAddress: "hello@nikl.me"
         #   SourceArn: !GetAtt logicalNameOfResource.attributeName
         EmailVerificationSubject: "Confirm your e mail adress"
-        EmailVerificationMessage: "Hi {username} Your verification code is {####}."
+        EmailVerificationMessage: "Hi there. Your verification code for Findus is {####}."
         Schema:
           - AttributeDataType: String
             Name: email

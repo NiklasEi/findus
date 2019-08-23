@@ -81,6 +81,7 @@ export class LoginForm extends Component {
   onFailure(err) {
     console.error(err)
     NotificationManager.error("Failed to log in: " + err.message, "Error", 20000)
+    this.setState({ loggingIn: false });
   }
 
   resetState(message) {

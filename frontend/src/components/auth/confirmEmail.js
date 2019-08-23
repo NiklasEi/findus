@@ -73,6 +73,7 @@ export class ConfirmEmailForm extends Component {
         onSubmit={this.submit}
         className={this.props.className || style.form || ""}
       >
+        <p>Please check your E-mail and enter your verification code</p>
         <TextField
           className={style.input}
           variant="outlined"

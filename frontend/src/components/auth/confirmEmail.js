@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import userPool from "../../utils/auth/userPool";
+import { FaCheck } from "react-icons/fa";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
 export class ConfirmEmailForm extends Component {
   constructor(props) {
@@ -37,23 +40,26 @@ export class ConfirmEmailForm extends Component {
     };
 
     var cognitoUser = new this.AmazonCognitoIdentity.CognitoUser(userData);
-    cognitoUser.confirmRegistration(this.state.code, true, function(
-      err,
-      result
-    ) {
-      if (err) {
-        console.log(err.message || JSON.stringify(err));
-        if(this.props.fail) {
-          this.props.fail();
+    this.setState({ verifying: true });
+    cognitoUser.confirmRegistration(
+      this.state.code,
+      true,
+      function(err, result) {
+        if (err) {
+          console.log(err.message || JSON.stringify(err));
+          if (this.props.fail) {
+            this.props.fail();
+          }
+          return;
         }
-        return;
-      }
-      if(result === "SUCCESS") {
-        if(this.props.success) {
-          this.props.success();
+        if (result === "SUCCESS") {
+          this.setState({ verifying: false });
+          if (this.props.success) {
+            this.props.success();
+          }
         }
-      }
-    }.bind(this));
+      }.bind(this)
+    );
   }
 
   onChange(event) {
@@ -63,23 +69,48 @@ export class ConfirmEmailForm extends Component {
   render() {
     return (
       <form onSubmit={this.submit}>
-        <input
-          type="text"
+        <TextField
+          className={style.input}
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="Username"
+          value={this.state.username || ""}
+          onChange={this.change.bind(this)}
           name="username"
-          placeholder="Username"
-          required
-          onChange={this.onChange}
-          value={this.state.username}
+          autoComplete="username"
+          disabled={this.state.verifying}
+          autoFocus
         />
-        <input
-          type="text"
+        <TextField
+          className={style.input}
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
           name="code"
-          placeholder="Verification code"
-          required
-          onChange={this.onChange}
-          value={this.state.code}
+          label="Verification code"
+          type="code"
+          value={this.state.password || ""}
+          onChange={this.change.bind(this)}
+          id="code"
+          disabled={this.state.verifying}
         />
-        <input type="submit" value="Verify my e-mail" />
+        <Button type="submit" fullWidth variant="contained" color="primary">
+          {this.state.verifying ? (
+            <>
+              <span>Verifying&nbsp;</span>
+              <FaSpinner className="icon-spin" />
+            </>
+          ) : (
+            <>
+              <span>Verify&nbsp;</span>
+              <FaCheck />
+            </>
+          )}
+        </Button>
       </form>
     );
   }

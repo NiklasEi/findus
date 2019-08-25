@@ -67,6 +67,17 @@ export class Collection extends Component {
       );
       return;
     }
+    if (
+      this.state.edit.title.trim() === this.state.collection.title &&
+      this.state.edit.description.trim() === this.state.collection.description
+    ) {
+      NotificationManager.info(
+        `No changes were detected in the title or description.`,
+        "Nothing to update",
+        10000
+      );
+      return;
+    }
     this.setState({ submitting: true });
     update(this.state.collection.id, {
       title: this.state.edit.title.trim(),
@@ -160,13 +171,13 @@ export class Collection extends Component {
           <h4 className={style.title}>{collection.title}</h4>
           <p>{collection.description}</p>
           <div className={style.footer}>
-            <div className={style.icon} onClick={this.startEdit.bind(this)}>
+            <div className={style.icon} onClick={this.startEdit.bind(this)} title="Edit collection">
               <FaPen size="1.2em" />
             </div>
             <span>
               {collection.bookmarks ? collection.bookmarks.length : "0"} entries
             </span>
-            <div className={style.icon} onClick={this.delete.bind(this)}>
+            <div className={style.icon} onClick={this.delete.bind(this)} title="Delete collection">
               {this.state.deleting ? (
                 <FaSpinner size="1.2em" className="icon-spin" />
               ) : (
@@ -177,7 +188,7 @@ export class Collection extends Component {
         </div>
       )
     ) : (
-      <div className="flexCenter">
+      <div className="flexCenter" title="Loading your collection ...">
         <FaSpinner className="icon-spin" />
       </div>
     );

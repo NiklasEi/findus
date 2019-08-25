@@ -145,6 +145,26 @@ export class CollectionDetail extends Component {
       );
       return;
     }
+    let editedBookmark = this.state.bookmarks.find(bookmark => this.state.editBookmark.id === bookmark.id)
+    if(!editedBookmark) {
+      NotificationManager.error(
+        `Unable to find the bookmark being edited`,
+        null,
+        20000
+      );
+      return;
+    }
+    if (
+      this.state.editBookmark.lable.trim() === editedBookmark.lable &&
+      this.state.editBookmark.url.trim() === editedBookmark.url
+    ) {
+      NotificationManager.info(
+        `No changes were detected in the lable or url.`,
+        "Nothing to update",
+        10000
+      );
+      return;
+    }
     this.setState({ submittingEdit: true });
     update(this.state.editBookmark.id, {
       lable: this.state.editBookmark.lable.trim(),
@@ -207,8 +227,8 @@ export class CollectionDetail extends Component {
     });
   }
 
-  clearEdit(event, id) {
-    event.preventDefault();
+  clearEdit(event) {
+    if (event) event.preventDefault();
     let bookmarks = [...this.state.bookmarks];
     this.setState({
       // strip editing info from bookmarks

@@ -13,7 +13,12 @@ import {
   // DropdownMenu,
   // DropdownItem,
 } from "reactstrap";
-import { FaSignOutAlt, FaSignInAlt, FaUserPlus, FaBookmark, FaUser } from "react-icons/fa";
+import {
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
+  FaUser,
+} from "react-icons/fa";
 
 export class Nav extends Component {
   constructor(props) {
@@ -58,7 +63,10 @@ export class Nav extends Component {
   render() {
     return (
       <Navbar className={style.nav} light expand="md">
-        <Link to="/" className="navbar-brand"><img src="/images/favicon/40x40.png" alt="icon"/>Findus</Link>
+        <Link to="/" className="navbar-brand">
+          <img src="/images/favicon/40x40.png" alt="icon" />
+          Findus
+        </Link>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <MatNav className="ml-auto" navbar>
@@ -69,16 +77,11 @@ export class Nav extends Component {
                     <FaSignOutAlt /> Logout
                   </Link>
                 </NavItem>
-              <NavItem>
-                <Link to="/app/profile" className="nav-link">
-                  <FaUser /> Profile
-                </Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/app/collection" className="nav-link">
-                  <FaBookmark /> Collection
-                </Link>
-              </NavItem>
+                <NavItem>
+                  <Link to="/app/profile" className="nav-link">
+                    <FaUser /> Profile
+                  </Link>
+                </NavItem>
               </>
             ) : (
               <>

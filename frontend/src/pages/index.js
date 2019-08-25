@@ -31,7 +31,7 @@ export class Index extends Component {
                 Add bookmarks to your collection
               </li>
               <li>
-                You can now log in from anywhere and use aour bookmarks
+                You can now log in from anywhere and use your bookmarks
               </li>
             </ul>
             </div>
